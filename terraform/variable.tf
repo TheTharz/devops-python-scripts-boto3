@@ -23,3 +23,13 @@ variable "kitty" {
   type = tuple([ string, number, bool])
   default = ["kitty", 3, true]
 }
+
+variable "pet" {
+  type = map(string)
+  default = {
+    name = "bella"
+    color = "black"
+    food = "chicken"
+    favorite = true
+  }
+}
