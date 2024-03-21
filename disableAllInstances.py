@@ -37,17 +37,13 @@ def disable_running_instances():
   return response;
 
 def main():
-  print("====================Active Instances ======================")
   instances = get_all_instances();
   for instance in instances:
     print(f"Instance ID: {instance['InstanceID']}");
     print(f"Instance Type: {instance['InstanceType']}");
     print(f"Instance State: {instance['InstanceState']}");
-    print("-" * 50);
-  if(instances == []):
-    print("No active instances found");
-    return;
-  print("====================Disabling Instances ======================")
+
+ 
   response = disable_running_instances();
   print(response);
 
