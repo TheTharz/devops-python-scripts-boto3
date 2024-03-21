@@ -8,12 +8,7 @@ def disable_instances(instance_ids):
 
 def get_all_instances():
   response = ec2_client.describe_instances(
-    Filters=[
-      {
-        "Name": "instance-state-name",
-        "Values": ["running"]
-      }
-    ]
+    
   );
   instances = [];
   for reservation in response["Reservations"]:
@@ -32,18 +27,30 @@ def get_all_instances():
 
 def disable_running_instances():
   instances = get_all_instances();
-  instance_ids = [instance["InstanceID"] for instance in instances];
+  if(instances == []):
+    return ;
+
+  instance_ids = [];
+  for instance in instances:
+    if(instance["InstanceState"] == "running"):
+      instance_ids.append(instance["InstanceID"]);
+  if(instance_ids == []):
+    return "No running instances found";
   response = disable_instances(instance_ids);
   return response;
 
 def main():
+  
   instances = get_all_instances();
   for instance in instances:
     print(f"Instance ID: {instance['InstanceID']}");
     print(f"Instance Type: {instance['InstanceType']}");
     print(f"Instance State: {instance['InstanceState']}");
-
- 
+    print("-" * 50);
+  if(instances == []):
+    print("No active instances found");
+    return;
+  print("==========================================")
   response = disable_running_instances();
   print(response);
 
