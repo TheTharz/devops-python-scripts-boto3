@@ -4,5 +4,5 @@ response = ec2.describe_instances()
 instances = response['Reservations'][0]['Instances']
 
 for instance in instances:
-  print(instance['InstanceID'])
+  print(instance['InstanceId'])
 
