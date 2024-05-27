@@ -1,21 +1,18 @@
 import boto3
 
-# Create a session to interact with AWS services
-session = boto3.Session()
+ec2 = boto3.client('ec2')
+response = ec2.describe_instances()
 
-# Get all available regions
-regions = session.get_available_regions('ec2')
+# Iterate over reservations and instances
+for reservation in response['Reservations']:
+    for instance in reservation['Instances']:
+        instance_id = instance['InstanceId']
 
-# Iterate over each region
-for region in regions:
-    print(f"Instances in region: {region}")
+        # Get instance tags
+        tags = instance.get('Tags', [])
+        
+        # Find the 'Name' tag if it exists
+        name_tag = next((tag['Value'] for tag in tags if tag['Key'] == 'Name'), None)
 
-    # Create an EC2 client for the current region
-    ec2 = session.client('ec2', region_name=region)
-
-    # Describe instances in the current region
-    response = ec2.describe_instances()
-
-    # Extract instance information and print
-    instances = [instance['InstanceId'] for reservation in response['Reservations'] for instance in reservation['Instances']]
-    print(instances)
+        # Print instance ID and Name tag (if available)
+        print(f"Instance ID: {instance_id}, Name: {name_tag}")
